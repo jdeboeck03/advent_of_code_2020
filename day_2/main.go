@@ -26,7 +26,6 @@ func loadInput(filename string) ([]string, error) {
 	return input, nil
 }
 
-// This will need some more split feeling
 func main() {
 	filename := "input.txt"
 	input, err := loadInput(filename)
