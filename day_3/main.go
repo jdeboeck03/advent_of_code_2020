@@ -5,6 +5,7 @@ import (
 	"fmt"
 	"log"
 	"os"
+	"time"
 )
 
 // loads input of file into a slice of integer variables
@@ -42,30 +43,31 @@ func createArea(input []string) ([][]string, error) {
 	return area, nil
 }
 
-func findTrees(area [][]string) (int, error) {
+func findTrees(area [][]string, right_cnt int, bottom_cnt int) int {
 	var tree_cnt = 0
 	var tree = "#"
 	var width = len(area[0])
 	var height = len(area)
-	fmt.Println("Size of Area:")
-	fmt.Printf("Height: %d\n", height)
-	fmt.Printf("Width: %d\n", width)
+	//fmt.Println("Size of Area:")
+	//fmt.Printf("Height: %d\n", height)
+	//fmt.Printf("Width: %d\n", width)
 	var height_index = 0
 	var width_index = 0
-	var right_cnt = 3
+	var curr_bottom_cnt = bottom_cnt
+	var curr_right_cnt = right_cnt
 	if area[height_index][width_index] == tree {
 		tree_cnt += 1
 	}
 	// As long as we have not reached the bottom of the area
 	// continue looping
-	for height_index < height-1 {
+	for height_index < height-bottom_cnt {
 		// Descend downwards
-		height_index += 1
-		width_index += right_cnt
-		right_cnt = 3
+		height_index += curr_bottom_cnt
+		width_index += curr_right_cnt
+		curr_right_cnt = right_cnt
 		// Check if there is a tree
-		// fmt.Printf("Height: %d Width: %d\n", height_index, width_index)
-		// fmt.Println(area[height_index][width_index])
+		//fmt.Printf("Height: %d Width: %d\n", height_index, width_index)
+		//fmt.Println(area[height_index][width_index])
 		if area[height_index][width_index] == tree {
 			// Found a tree
 			//fmt.Println("BOINK")
@@ -76,15 +78,15 @@ func findTrees(area [][]string) (int, error) {
 
 		// Check if we reached the border of the area
 		// If so we need to start from the left
-		var border_check = width_index + right_cnt
+		var border_check = width_index + curr_right_cnt
 		if border_check >= width {
-			// fmt.Println("Reached the end")
+			//fmt.Println("Reached the end")
 			// Check how far we still need to go
-			right_cnt = border_check - width
+			curr_right_cnt = border_check - width
 			width_index = 0
 		}
 	}
-	return tree_cnt, nil
+	return tree_cnt
 }
 
 func main() {
@@ -96,9 +98,18 @@ func main() {
 	if err != nil {
 		log.Fatalf("Program failed: %s", err)
 	}
-	result, err := findTrees(area)
-	if err != nil {
-		log.Fatalf("Program failed: %s", err)
-	}
-	fmt.Printf("Tree count: %d", result)
+	start1 := time.Now()
+	result1 := findTrees(area, 3, 1)
+	fmt.Println("Solution 1: ")
+	fmt.Printf("Tree count: %d\n", result1)
+	fmt.Printf("Time: %s\n", time.Since(start1))
+	start2 := time.Now()
+	result2 := findTrees(area, 1, 1)
+	result3 := findTrees(area, 5, 1)
+	result4 := findTrees(area, 7, 1)
+	result5 := findTrees(area, 1, 2)
+	total_result := result1 * result2 * result3 * result4 * result5
+	fmt.Println("Solution 2: ")
+	fmt.Printf("Multiplication Result: %d\n", total_result)
+	fmt.Printf("Time: %s\n", time.Since(start2))
 }
