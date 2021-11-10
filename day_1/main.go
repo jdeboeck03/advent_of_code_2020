@@ -30,7 +30,7 @@ func loadInput(filename string) ([]int, error) {
 }
 
 func main() {
-	filename := "input"
+	filename := "input.txt"
 	input, err := loadInput(filename)
 	if err != nil {
 		log.Fatalf("Program failed: %s", err)
