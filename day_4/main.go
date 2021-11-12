@@ -171,8 +171,67 @@ func processFields2(input []string) int {
 								field_checker[field] = true
 							}
 						}
+					case field == "eyr":
+						// First match exactly on 4 digits
+						re := regexp.MustCompile("^[0-9]{4}$")
+						valid_field := re.MatchString(value)
+						//fmt.Println(valid_field)
+						if valid_field {
+							// Parse value to an integer
+							value_int, err := strconv.Atoi(value)
+							if err != nil {
+								log.Fatalf("Program failed: %s", err)
+							}
+							if 2020 <= value_int && value_int <= 2030 {
+								//fmt.Println("Correct!")
+								field_checker[field] = true
+							}
+						}
+					case field == "hgt":
+						// First match exactly on 4 digits
+						re := regexp.MustCompile("^([0-9]*)cm|in$")
+						valid_field := re.MatchString(value)
+						//fmt.Println(valid_field)
+						if valid_field {
+							// Parse value to an integer
+							re := regexp.MustCompile("[0-9]*")
+							extracted_value := re.FindString(value)
+							re = regexp.MustCompile("cm|in")
+							hgt_type := re.FindString(value)
+							value_int, err := strconv.Atoi(extracted_value)
+							if err != nil {
+								log.Fatalf("Program failed: %s", err)
+							}
+							if hgt_type == "cm" && 150 <= value_int && value_int <= 193 {
+								//fmt.Println("Correct!")
+								//fmt.Println(extracted_value)
+								field_checker[field] = true
+							}
+							if hgt_type == "in" && 59 <= value_int && value_int <= 76 {
+								//fmt.Println("Correct!")
+								//fmt.Println(extracted_value)
+								field_checker[field] = true
+							}
+						}
+					case field == "hcl":
+						// First match exactly on 4 digits
+						re := regexp.MustCompile("^#([0-9]|[a-f]){6}$")
+						valid_field := re.MatchString(value)
+						//fmt.Println(valid_field)
+						field_checker[field] = valid_field
+					case field == "ecl":
+						// First match exactly on 4 digits
+						re := regexp.MustCompile("^amb|blu|brn|gry|grn|hzl|oth$")
+						valid_field := re.MatchString(value)
+						//fmt.Println(valid_field)
+						field_checker[field] = valid_field
+					case field == "pid":
+						// First match exactly on 4 digits
+						re := regexp.MustCompile("^[0-9]{9}$")
+						valid_field := re.MatchString(value)
+						//fmt.Println(valid_field)
+						field_checker[field] = valid_field
 					}
-
 				}
 			}
 		}
@@ -184,7 +243,6 @@ func processFields2(input []string) int {
 	for _, req_field := range req_fields {
 		if !field_checker[req_field] && req_field != "cid" {
 			// one of the fields on passport is not filled in
-			//fmt.Println("Oei Oei")
 			valid_passport = false
 		}
 	}
