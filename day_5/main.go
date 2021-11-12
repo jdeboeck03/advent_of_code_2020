@@ -79,6 +79,20 @@ func calculateResults(row_ids []int, column_ids []int) []int {
 	return results
 }
 
+func MinMax(array []int) (int, int) {
+	var max int = array[0]
+	var min int = array[0]
+	for _, value := range array {
+		if max < value {
+			max = value
+		}
+		if min > value {
+			min = value
+		}
+	}
+	return min, max
+}
+
 func main() {
 	input, err := loadInput()
 	if err != nil {
@@ -91,6 +105,7 @@ func main() {
 	fmt.Println(row_ids)
 	fmt.Println(column_ids)
 	seat_ids_1 := calculateResults(row_ids, column_ids)
-	fmt.Printf("Result of multiplication: %d\n", seat_ids_1)
+	_, max_seat_id := MinMax(seat_ids_1)
+	fmt.Printf("Highest Seat ID: %d\n", max_seat_id)
 	fmt.Printf("Time: %s\n", time.Since(start1))
 }
