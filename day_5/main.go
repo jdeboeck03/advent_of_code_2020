@@ -5,6 +5,7 @@ import (
 	"fmt"
 	"log"
 	"os"
+	"strings"
 	"time"
 )
 
@@ -20,15 +21,38 @@ func loadInput() ([]string, error) {
 	return input, nil
 }
 
+func calculateRows(input []string) []int {
+	row_ids := []int{}
+	for _, line := range input {
+		fmt.Println(line)
+		//Now you can search each boarding pass
+		line_chars := strings.Split(line, "")
+		var lower_bound = 0
+		var upper_bound = 127
+		for i := 0; i < 7; i++ {
+			char := line_chars[i]
+			if char == "F" {
+				upper_bound = (lower_bound + upper_bound) / 2
+				//fmt.Println(upper_bound)
+			} else {
+				// char is B
+				lower_bound = (lower_bound+upper_bound)/2 + 1
+				//fmt.Println(lower_bound)
+			}
+		}
+		row_ids = append(row_ids, lower_bound)
+	}
+	return row_ids
+}
+
 func main() {
 	input, err := loadInput()
 	if err != nil {
 		log.Fatalf("Program failed: %s", err)
 	}
-	fmt.Println(input)
 	start1 := time.Now()
-	valid_passports_1 := 5
+	row_ids := calculateRows(input)
 	fmt.Println("Solution 1:")
-	fmt.Printf("Number of valid passports: %d\n", valid_passports_1)
+	fmt.Println(row_ids)
 	fmt.Printf("Time: %s\n", time.Since(start1))
 }
